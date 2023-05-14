@@ -7,11 +7,11 @@ import { DashBoardClient, DashboardCoach } from '../../components/dashboard';
 export const dashboardPage = () => {
 
   const user = {
-    role: 'client'
+    role: 'coach'
   }
 
   return (
-    <DashboardLayaout title={'Teslo-Shop - Home'} pageDescription={'Find the best Teslo products here'}>
+    <DashboardLayaout title={'My Favorite Coach - Dashboard'} pageDescription={'Entrenamiento personalizado para mejorar tu salud'}>
       {
         user.role === 'coach' ? (
           <>

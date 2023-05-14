@@ -12,7 +12,7 @@ interface Props {
 export const DashboardLayaout: FC<PropsWithChildren<Props>> = ({ children, title, pageDescription, imageFullUrl }) => {
 
    const user = {
-      role: 'client'
+      role: 'coach'
    }
 
    return (

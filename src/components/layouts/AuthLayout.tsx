@@ -16,7 +16,7 @@ export const AuthLayout: FC<PropsWithChildren<Props>> = ({ children, title }) =>
          </Head>
          <main>
             <Box position={'fixed'} top={10} left={10}>
-               <Image src={'/logo.png'} alt='logo' width={313} height={135} priority={true} />
+               <Image src={'/logo-1.png'} alt='logo' width={313} height={135} priority={true} />
             </Box>
             <Box
                display='flex'

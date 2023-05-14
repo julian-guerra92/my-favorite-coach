@@ -43,10 +43,10 @@ export const AdminNavbar = () => {
 
             <Box sx={{ display: isSearchVisible ? 'none' : { xs: 'none', sm: 'none', md: 'block' } }} className='fadeIn'>
 
-               <NextLink href='/category/men' passHref legacyBehavior>
+               <NextLink href='/clients' passHref legacyBehavior>
                   <Link>
                      <Button
-                        color={asPath === '/clientes' ? 'primary' : 'info'}
+                        color={asPath === '/clients' ? 'primary' : 'info'}
                         sx={{ fontSize: '16px', ":hover": { color: 'black' } }}
                      >
                         Clientes
