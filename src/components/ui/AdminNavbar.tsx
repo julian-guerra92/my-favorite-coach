@@ -2,17 +2,18 @@
 import { ChangeEvent, useContext, useState } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { AppBar, Badge, Box, Button, IconButton, Input, InputAdornment, Link, Toolbar, Typography } from '@mui/material';
-import { ClearOutlined, SearchOutlined, ShoppingCartOutlined } from '@mui/icons-material';
-import { UiContext } from '../../context';
 
-export const Navbar = () => {
+import { AppBar, Box, Button, IconButton, Input, InputAdornment, Link, Toolbar } from '@mui/material';
+import { ClearOutlined, SearchOutlined } from '@mui/icons-material';
+
+import { UiContext } from '../../context';
+import Image from 'next/image';
+
+export const AdminNavbar = () => {
 
    const { asPath, push } = useRouter();
 
    const { toggleSideMenu } = useContext(UiContext);
-
-   // const { summary } = useContext(CartContext);
 
    const [searchTerm, setSearchTerm] = useState('');
 
@@ -32,43 +33,45 @@ export const Navbar = () => {
       <AppBar>
          <Toolbar>
 
-            <NextLink href='/' passHref legacyBehavior>
+            <NextLink href='/dashboard' passHref legacyBehavior>
                <Link display='flex' alignItems='center'>
-                  <Typography variant='h5' fontWeight='600'>Teslo |</Typography>
-                  <Typography variant='h5' fontWeight='600' sx={{ ml: 0.5 }}>Shop</Typography>
+                  <Image src={'/logo-2.png'} alt='logo' width={133} height={43} priority={true} />
                </Link>
             </NextLink>
 
             <Box flex={1} />
 
-            <Box sx={{ display: isSearchVisible ? 'none' : { xs: 'none', sm: 'block' } }} className='fadeIn'>
+            <Box sx={{ display: isSearchVisible ? 'none' : { xs: 'none', sm: 'none', md: 'block' } }} className='fadeIn'>
+
                <NextLink href='/category/men' passHref legacyBehavior>
                   <Link>
                      <Button
-                        color={asPath === '/category/men' ? 'primary' : 'info'}
+                        color={asPath === '/clientes' ? 'primary' : 'info'}
                         sx={{ fontSize: '16px', ":hover": { color: 'black' } }}
                      >
-                        Men
+                        Clientes
                      </Button>
                   </Link>
                </NextLink>
-               <NextLink href='/category/women' passHref legacyBehavior>
+
+               <NextLink href='/actividades-fisicas' passHref legacyBehavior>
                   <Link>
                      <Button
                         color={asPath === '/category/women' ? 'primary' : 'info'}
                         sx={{ fontSize: '16px', ml: 1, ":hover": { color: 'black' } }}
                      >
-                        Women
+                        Actividades Físicas
                      </Button>
                   </Link>
                </NextLink>
-               <NextLink href='/category/kids' passHref legacyBehavior>
+
+               <NextLink href='/calendario' passHref legacyBehavior>
                   <Link>
                      <Button
                         color={asPath === '/category/kids' ? 'primary' : 'info'}
                         sx={{ fontSize: '16px', ml: 1, ":hover": { color: 'black' } }}
                      >
-                        Kids
+                        Calendario
                      </Button>
                   </Link>
                </NextLink>
@@ -88,7 +91,7 @@ export const Navbar = () => {
                         onChange={onChageTerm}
                         onKeyUp={(event) => event.key === 'Enter' ? onSearchTerm() : null}
                         type='text'
-                        placeholder="Search..."
+                        placeholder="Buscar..."
                         endAdornment={
                            <InputAdornment position="end">
                               <IconButton
@@ -118,19 +121,6 @@ export const Navbar = () => {
             >
                <SearchOutlined />
             </IconButton>
-
-            {/* <NextLink href='/cart' passHref legacyBehavior>
-               <Link>
-                  <IconButton>
-                     <Badge
-                        badgeContent={summary.numberOfItems > 9 ? '+9' : summary.numberOfItems}
-                        color='secondary'
-                     >
-                        <ShoppingCartOutlined />
-                     </Badge>
-                  </IconButton>
-               </Link>
-            </NextLink> */}
 
             <Button
                sx={{ fontSize: '16px', ml: 1 }}

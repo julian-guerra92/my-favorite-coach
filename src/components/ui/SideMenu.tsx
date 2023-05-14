@@ -1,23 +1,30 @@
+
 import { ChangeEvent, useContext, useState } from 'react';
 import { useRouter } from 'next/router';
+import { Box, Drawer, IconButton, Input, InputAdornment, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import {
-   Box, Divider, Drawer, IconButton, Input, InputAdornment, List, ListItem, ListItemButton, ListItemIcon, ListItemText, ListSubheader
-} from "@mui/material";
-import {
-   AccountCircleOutlined, AdminPanelSettings, CategoryOutlined, ConfirmationNumberOutlined, EscalatorWarningOutlined, FemaleOutlined,
-   LoginOutlined, MaleOutlined, SearchOutlined, VpnKeyOutlined
+   AccountCircleOutlined, CalendarMonthOutlined, EqualizerOutlined, FitnessCenterOutlined, GroupOutlined, LoginOutlined, SearchOutlined
 } from "@mui/icons-material";
 import { DashboardOutlined } from '@mui/icons-material';
-import { UiContext, AuthContext } from "../../context";
+
+import { UiContext } from "../../context";
 
 
 export const SideMenu = () => {
+
+   const user = {
+      role: 'user'
+   }
+
+   const logout = () => {
+
+   }
 
    const router = useRouter();
 
    const { isMenuOpen, toggleSideMenu } = useContext(UiContext);
 
-   const { isLoggedIn, user, logout } = useContext(AuthContext);
+   // const { isLoggedIn, user, logout } = useContext(AuthContext);
 
    const [searchTerm, setSearchTerm] = useState('');
 
@@ -43,7 +50,7 @@ export const SideMenu = () => {
          anchor='right'
          sx={{ backdropFilter: 'blur(4px)', transition: 'all 0.5s ease-out' }}
       >
-         <Box sx={{ width: 250, paddingTop: 5 }}>
+         <Box sx={{ width: 300, paddingTop: 5 }}>
 
             <List>
 
@@ -54,7 +61,7 @@ export const SideMenu = () => {
                      onChange={onChageTerm}
                      onKeyUp={(event) => event.key === 'Enter' ? onSearchTerm() : null}
                      type='text'
-                     placeholder="Search..."
+                     placeholder="Buscar..."
                      endAdornment={
                         <InputAdornment position="end">
                            <IconButton
@@ -67,111 +74,103 @@ export const SideMenu = () => {
                   />
                </ListItem>
 
+               <ListItemButton>
+                  <ListItemIcon>
+                     <AccountCircleOutlined />
+                  </ListItemIcon>
+                  <ListItemText primary={'Perfil'} />
+               </ListItemButton>
+
+               <ListItemButton onClick={() => navigateTo('/dashboard')}>
+                  <ListItemIcon>
+                     <DashboardOutlined />
+                  </ListItemIcon>
+                  <ListItemText primary={'Dashboard'} />
+               </ListItemButton>
+
+               <ListItemButton onClick={() => navigateTo('/dashboard')}>
+                  <ListItemIcon>
+                     <EqualizerOutlined />
+                  </ListItemIcon>
+                  <ListItemText primary={'Metas e Indicadores'} />
+               </ListItemButton>
+
+
+               {/* Vista Entrenador */}
                {
-                  isLoggedIn && (
+                  user.role === 'coach' && (
                      <>
-                        <ListItemButton>
+                        <ListItemButton
+                           sx={{ display: { xs: '', sm: '', md: 'none' } }}
+                           onClick={() => navigateTo('/category/men')}
+                        >
                            <ListItemIcon>
-                              <AccountCircleOutlined />
+                              <GroupOutlined />
                            </ListItemIcon>
-                           <ListItemText primary={'Perfil'} />
+                           <ListItemText primary={'Clientes'} />
                         </ListItemButton>
 
-                        <ListItemButton onClick={() => navigateTo('/orders/history')}>
+                        <ListItemButton
+                           sx={{ display: { xs: '', sm: '', md: 'none' } }}
+                           onClick={() => navigateTo('/category/women')}
+                        >
                            <ListItemIcon>
-                              <ConfirmationNumberOutlined />
+                              <FitnessCenterOutlined />
                            </ListItemIcon>
-                           <ListItemText primary={'My Orders'} />
+                           <ListItemText primary={'Actividades Físicas'} />
+                        </ListItemButton>
+
+                        <ListItemButton
+                           sx={{ display: { xs: '', sm: '', md: 'none' } }}
+                           onClick={() => navigateTo('/category/kids')}
+                        >
+                           <ListItemIcon>
+                              <CalendarMonthOutlined />
+                           </ListItemIcon>
+                           <ListItemText primary={'Calendario'} />
                         </ListItemButton>
                      </>
                   )
                }
 
-               <ListItemButton
-                  sx={{ display: { xs: '', sm: 'none' } }}
-                  onClick={() => navigateTo('/category/men')}
-               >
-                  <ListItemIcon>
-                     <MaleOutlined />
-                  </ListItemIcon>
-                  <ListItemText primary={'Men'} />
-               </ListItemButton>
-
-               <ListItemButton
-                  sx={{ display: { xs: '', sm: 'none' } }}
-                  onClick={() => navigateTo('/category/women')}
-               >
-                  <ListItemIcon>
-                     <FemaleOutlined />
-                  </ListItemIcon>
-                  <ListItemText primary={'Women'} />
-               </ListItemButton>
-
-               <ListItemButton
-                  sx={{ display: { xs: '', sm: 'none' } }}
-                  onClick={() => navigateTo('/category/kids')}
-               >
-                  <ListItemIcon>
-                     <EscalatorWarningOutlined />
-                  </ListItemIcon>
-                  <ListItemText primary={'Kids'} />
-               </ListItemButton>
-
+               {/* Vista Usuario */}
                {
-                  (isLoggedIn)
-                     ? (
-                        <ListItemButton onClick={logout}>
-                           <ListItemIcon>
-                              <LoginOutlined />
-                           </ListItemIcon>
-                           <ListItemText primary={'Logout'} />
-                        </ListItemButton>
-                     ) : (
-                        <ListItemButton onClick={() => navigateTo(`/auth/login?p=${router.asPath}`)}>
-                           <ListItemIcon>
-                              <VpnKeyOutlined />
-                           </ListItemIcon>
-                           <ListItemText primary={'Login'} />
-                        </ListItemButton>
-                     )
-               }
-
-               {/* Admin */}
-               {
-                  user?.role === 'admin' && (
+                  user?.role === 'user' && (
                      <>
-                        <Divider />
-                        <ListSubheader>Admin Panel</ListSubheader>
+                        <ListItemButton
+                           sx={{ display: { xs: '', sm: '', md: 'none' } }}
+                           onClick={() => navigateTo('/category/men')}
+                        >
+                           <ListItemIcon>
+                              <FitnessCenterOutlined />
+                           </ListItemIcon>
+                           <ListItemText primary={'Entrenamiento'} />
+                        </ListItemButton>
 
-                        <ListItemButton onClick={() => navigateTo('/admin/')}>
+                        <ListItemButton
+                           sx={{ display: { xs: '', sm: '', md: 'none' } }}
+                           onClick={() => navigateTo('/category/kids')}
+                        >
                            <ListItemIcon>
-                              <DashboardOutlined />
+                              <CalendarMonthOutlined />
                            </ListItemIcon>
-                           <ListItemText primary={'Dashboard'} />
-                        </ListItemButton>
-                        <ListItemButton onClick={() => navigateTo('/admin/products')}>
-                           <ListItemIcon>
-                              <CategoryOutlined />
-                           </ListItemIcon>
-                           <ListItemText primary={'Products'} />
-                        </ListItemButton>
-                        <ListItemButton onClick={() => navigateTo('/admin/orders')}>
-                           <ListItemIcon>
-                              <ConfirmationNumberOutlined />
-                           </ListItemIcon>
-                           <ListItemText primary={'Orders'} />
-                        </ListItemButton>
-                        <ListItemButton onClick={() => navigateTo('/admin/users')}>
-                           <ListItemIcon>
-                              <AdminPanelSettings />
-                           </ListItemIcon>
-                           <ListItemText primary={'Users'} />
+                           <ListItemText primary={'Calendario'} />
                         </ListItemButton>
                      </>
                   )
                }
+
+               <ListItemButton onClick={logout}>
+                  <ListItemIcon>
+                     <LoginOutlined />
+                  </ListItemIcon>
+                  <ListItemText primary={'Salir'} />
+               </ListItemButton>
+
             </List>
          </Box>
-      </Drawer>
+      </Drawer >
    )
 }
+
+//TODO: Proteger esta ruta dependiendo de la autenticación del usuario

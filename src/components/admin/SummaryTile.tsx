@@ -11,16 +11,16 @@ interface Props {
 
 export const SummaryTile: FC<Props> = ({ title, subTitle, icon }) => {
    return (
-      <Grid item xs={12} sm={4} md={3}>
+      <Grid item xs={12} sm={12} md={6}>
          <Card sx={{ display: 'flex' }} className='summary-card'>
             <CardContent
-               sx={{ width: 60, display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+               sx={{ width: 150, display: 'flex', justifyContent: 'center', alignItems: 'center' }}
             >
                {icon}
             </CardContent>
             <CardContent sx={{ flex: '1 0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                <Typography variant='h3'>{title}</Typography>
-               <Typography variant='caption'>{subTitle}</Typography>
+               <Typography variant='subtitle1'>{subTitle}</Typography>
             </CardContent>
          </Card>
       </Grid>

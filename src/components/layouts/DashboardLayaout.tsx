@@ -1,7 +1,7 @@
 
 import { FC, PropsWithChildren } from 'react';
 import Head from 'next/head';
-import { Navbar, SideMenu } from '../ui';
+import { ClientNavbar, AdminNavbar, SideMenu } from '../ui';
 
 interface Props {
    title: string;
@@ -9,7 +9,12 @@ interface Props {
    imageFullUrl?: string;
 }
 
-export const ShopLayout: FC<PropsWithChildren<Props>> = ({ children, title, pageDescription, imageFullUrl }) => {
+export const DashboardLayaout: FC<PropsWithChildren<Props>> = ({ children, title, pageDescription, imageFullUrl }) => {
+
+   const user = {
+      role: 'client'
+   }
+
    return (
       <>
          <Head>
@@ -22,9 +27,15 @@ export const ShopLayout: FC<PropsWithChildren<Props>> = ({ children, title, page
             }
          </Head>
          <nav>
-            {/* <Navbar /> */}
+            {
+               user.role === 'coach' ? (
+                  <AdminNavbar />
+               ) : (
+                  <ClientNavbar />
+               )
+            }
          </nav>
-         {/* <SideMenu /> */}
+         <SideMenu />
          <main style={{
             margin: '80px auto',
             maxWidth: '1440px',

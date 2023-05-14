@@ -1,11 +1,11 @@
 
 import { Box } from '@mui/system';
-import { ShopLayout } from '../components/layouts/ShopLayout';
+import { DashboardLayaout } from '../components/layouts/DashboardLayaout';
 import { Typography } from '@mui/material';
 
 const Custom404 = () => {
    return (
-      <ShopLayout title='Page Not Found' pageDescription='There is nothing to show here'>
+      <DashboardLayaout title='Page Not Found' pageDescription='There is nothing to show here'>
          <Box
             display='flex'
             justifyContent='center'
@@ -25,7 +25,7 @@ const Custom404 = () => {
                Page Not Found
             </Typography>
          </Box>
-      </ShopLayout>
+      </DashboardLayaout>
    )
 }
 
