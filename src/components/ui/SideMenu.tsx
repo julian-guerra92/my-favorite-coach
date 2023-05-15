@@ -13,7 +13,7 @@ import { UiContext } from "../../context";
 export const SideMenu = () => {
 
    const user = {
-      role: 'user'
+      role: 'coach'
    }
 
    const logout = () => {
@@ -102,7 +102,7 @@ export const SideMenu = () => {
                      <>
                         <ListItemButton
                            sx={{ display: { xs: '', sm: '', md: 'none' } }}
-                           onClick={() => navigateTo('/category/men')}
+                           onClick={() => navigateTo('/clients')}
                         >
                            <ListItemIcon>
                               <GroupOutlined />
@@ -112,7 +112,7 @@ export const SideMenu = () => {
 
                         <ListItemButton
                            sx={{ display: { xs: '', sm: '', md: 'none' } }}
-                           onClick={() => navigateTo('/category/women')}
+                           onClick={() => navigateTo('/')}
                         >
                            <ListItemIcon>
                               <FitnessCenterOutlined />
@@ -122,7 +122,7 @@ export const SideMenu = () => {
 
                         <ListItemButton
                            sx={{ display: { xs: '', sm: '', md: 'none' } }}
-                           onClick={() => navigateTo('/category/kids')}
+                           onClick={() => navigateTo('/')}
                         >
                            <ListItemIcon>
                               <CalendarMonthOutlined />
