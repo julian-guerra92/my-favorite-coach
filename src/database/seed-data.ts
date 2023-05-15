@@ -1,6 +1,6 @@
 
 interface SeedUser {
-   _id: string;
+   id: string;
    identificationNumber: string;
    firstName: string;
    lastName: string;
@@ -51,7 +51,7 @@ export const initialData: SeedData = {
       //    age: 30,
       // },
       {
-         _id: '1',
+         id: '1',
          identificationNumber: '1',
          firstName: 'Darshan',
          lastName: 'Patel',
@@ -61,11 +61,13 @@ export const initialData: SeedData = {
          role: 'client',
          gender: 'masculino',
          age: 25,
+         weight: 80,
+         height: 1.70,
          profilePicture: '1.jpg',
          active: true
       },
       {
-         _id: '2',
+         id: '2',
          identificationNumber: '2',
          firstName: 'Evelin',
          lastName: 'Ciseneros',
@@ -75,11 +77,13 @@ export const initialData: SeedData = {
          role: 'client',
          gender: 'femenino',
          age: 50,
+         weight: 80,
+         height: 1.70,
          profilePicture: '2.jpg',
          active: true
       },
       {
-         _id: '3',
+         id: '3',
          identificationNumber: '3',
          firstName: 'Bladimir',
          lastName: 'Strong',
@@ -89,11 +93,13 @@ export const initialData: SeedData = {
          role: 'client',
          gender: 'masculino',
          age: 38,
+         weight: 80,
+         height: 1.70,
          profilePicture: '3.jpg',
          active: false
       },
       {
-         _id: '4',
+         id: '4',
          identificationNumber: '4',
          firstName: 'Luis',
          lastName: 'Villamil',
@@ -103,11 +109,13 @@ export const initialData: SeedData = {
          role: 'client',
          gender: 'masculino',
          age: 32,
+         weight: 80,
+         height: 1.70,
          profilePicture: '4.jpg',
          active: false
       },
       {
-         _id: '5',
+         id: '5',
          identificationNumber: '5',
          firstName: 'Stephanie',
          lastName: 'Liverani',
@@ -117,11 +125,13 @@ export const initialData: SeedData = {
          role: 'client',
          gender: 'femenino',
          age: 36,
+         weight: 80,
+         height: 1.70,
          profilePicture: '5.jpg',
          active: true
       },
       {
-         _id: '6',
+         id: '6',
          identificationNumber: '6',
          firstName: 'Albert',
          lastName: 'Buitrago',
@@ -131,6 +141,8 @@ export const initialData: SeedData = {
          role: 'client',
          gender: 'masculino',
          age: 28,
+         weight: 80,
+         height: 1.70,
          profilePicture: '6.jpg',
          active: true
       }

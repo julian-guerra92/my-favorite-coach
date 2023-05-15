@@ -16,7 +16,7 @@ export const ClientCard: FC<Props> = ({ user }) => {
    return (
       <Grid item xs={6} sm={4} md={3}>
          <Card>
-            <NextLink href={`/clients/${user._id}`} passHref prefetch={false} legacyBehavior>
+            <NextLink href={`/clients/${user.id}`} passHref prefetch={false} legacyBehavior>
                <Link>
                   <CardActionArea>
                      {

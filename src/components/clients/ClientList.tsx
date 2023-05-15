@@ -14,7 +14,7 @@ export const ClientsList: FC<Props> = ({ users }) => {
       <Grid container spacing={4}>
          {
             users.map(user => (
-               <ClientCard user={user} key={user._id} />
+               <ClientCard user={user} key={user.id} />
             ))
          }
       </Grid>

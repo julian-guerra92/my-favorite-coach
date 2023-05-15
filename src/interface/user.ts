@@ -2,7 +2,7 @@
 import { IWorkout } from ".";
 
 export interface IUser {
-   _id?: string;
+   id?: string;
    identificationNumber: string;
    firstName: string;
    lastName: string;
