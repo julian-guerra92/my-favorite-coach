@@ -1,9 +1,9 @@
 
 export interface IExercise {
-   _id?: string;
+   id?: string;
    title: string;
    description: string;
    calories: Number;
    intensity: string;
-   video: string;
+   referenceImage: string;
 }

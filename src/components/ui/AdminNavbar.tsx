@@ -54,10 +54,10 @@ export const AdminNavbar = () => {
                   </Link>
                </NextLink>
 
-               <NextLink href='/actividades-fisicas' passHref legacyBehavior>
+               <NextLink href='/exercises' passHref legacyBehavior>
                   <Link>
                      <Button
-                        color={asPath === '/category/women' ? 'primary' : 'info'}
+                        color={asPath === '/exercises' ? 'primary' : 'info'}
                         sx={{ fontSize: '16px', ml: 1, ":hover": { color: 'black' } }}
                      >
                         Actividades Físicas

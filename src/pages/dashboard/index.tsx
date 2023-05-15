@@ -4,7 +4,7 @@ import { Box, Typography } from '@mui/material';
 import { DashboardLayaout } from '../../components/layouts';
 import { DashBoardClient, DashboardCoach } from '../../components/dashboard';
 
-export const dashboardPage = () => {
+export const DashboardPage = () => {
 
   const user = {
     role: 'coach'
@@ -34,4 +34,4 @@ export const dashboardPage = () => {
   )
 }
 
-export default dashboardPage;
+export default DashboardPage;

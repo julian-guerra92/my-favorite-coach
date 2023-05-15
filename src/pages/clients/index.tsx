@@ -6,7 +6,7 @@ import { DashboardLayaout } from '../../components/layouts';
 import { ClientsList } from '../../components/clients';
 import { initialData } from '../../database/seed-data';
 
-export const ClientsPage = () => {
+const ClientListPage = () => {
 
    return (
       <DashboardLayaout title={'My Favorite Coach - Clientes'} pageDescription={'Listado de clientes registrados en el sistema'}>
@@ -31,4 +31,4 @@ export const ClientsPage = () => {
    )
 }
 
-export default ClientsPage;
+export default ClientListPage;

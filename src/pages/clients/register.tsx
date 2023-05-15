@@ -1,7 +1,7 @@
 
 import { ChangeEvent, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { SaveOutlined, UploadOutlined } from '@mui/icons-material';
+import { DeleteOutline, SaveOutlined, UploadOutlined } from '@mui/icons-material';
 import { Box, Button, Card, CardActions, CardMedia, Divider, FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, TextField, Typography, capitalize } from '@mui/material';
 
 import { DashboardLayaout } from '../../components/layouts';
@@ -23,7 +23,7 @@ interface FormData {
   profilePicture?: string;
 }
 
-export const register = () => {
+const RegisterClientPage = () => {
 
   const [isSaving, setIsSaving] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -44,7 +44,7 @@ export const register = () => {
   return (
     <DashboardLayaout title={'Registro de Nuevo Cliente'} pageDescription={'Registro de un nuevo cliente en la aplicación'}>
 
-      <Typography variant='h1' component='h1' marginTop='30px'>Registro de Nuevo Cliente:</Typography>
+      <Typography variant='h1' component='h1' marginTop='30px'>Registro Nuevo Cliente:</Typography>
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box display='flex' justifyContent='end' sx={{ mb: 1 }}>
@@ -133,32 +133,6 @@ export const register = () => {
               helperText={errors.password?.message}
             />
 
-            <Divider sx={{ my: 1 }} />
-
-            <FormControl sx={{ mb: 1 }}>
-              <FormLabel>Género</FormLabel>
-              <RadioGroup
-                row
-                value={getValues('gender')}
-                onChange={({ target }) => setValue('gender', target.value, { shouldValidate: true })}
-              >
-                {
-                  validGender.map(option => (
-                    <FormControlLabel
-                      key={option}
-                      value={option}
-                      control={<Radio color='secondary' />}
-                      label={capitalize(option)}
-                    />
-                  ))
-                }
-              </RadioGroup>
-            </FormControl>
-
-          </Grid>
-
-          <Grid item xs={12} sm={6}>
-
             {/* //TODO: Esto debe ser fecha de nacimiento */}
             <TextField
               label="Edad"
@@ -188,6 +162,32 @@ export const register = () => {
               helperText={errors.weight?.message}
             />
 
+            <Divider sx={{ my: 1 }} />
+
+            <FormControl sx={{ mb: 1 }}>
+              <FormLabel>Género</FormLabel>
+              <RadioGroup
+                row
+                value={getValues('gender')}
+                onChange={({ target }) => setValue('gender', target.value, { shouldValidate: true })}
+              >
+                {
+                  validGender.map(option => (
+                    <FormControlLabel
+                      key={option}
+                      value={option}
+                      control={<Radio color='secondary' />}
+                      label={capitalize(option)}
+                    />
+                  ))
+                }
+              </RadioGroup>
+            </FormControl>
+
+          </Grid>
+
+          <Grid item xs={12} sm={6}>
+
             <TextField
               label="Altura"
               type='number'
@@ -204,53 +204,48 @@ export const register = () => {
 
             <Divider sx={{ my: 2 }} />
 
-            <Box display='flex' flexDirection="column">
-              <FormLabel sx={{ mb: 1 }}>Foto de Perfil</FormLabel>
-              <Button
-                color="secondary"
-                fullWidth
-                startIcon={<UploadOutlined fontSize='large' />}
-                className='circular-btn'
-                sx={{ mb: 3 }}
-                size='large'
-                onClick={() => fileInputRef.current?.click()}
-              >
-                Subir Imagen
-              </Button>
-              <input
-                ref={fileInputRef} // se utiliza el useRef para hacer referencia al botón que queremes realmente que haga la acción
-                type='file'
-                multiple
-                accept='image/png, image/gif, image/jpeg'
-                style={{ display: 'none' }}
-                onChange={onFileSelected}
+            <FormLabel sx={{ marginBottom: 1 }}>Foto de Perfil</FormLabel>
+
+            <Button
+              color="secondary"
+              fullWidth
+              startIcon={<UploadOutlined fontSize='large' />}
+              className='circular-btn'
+              sx={{ mb: 3 }}
+              size='large'
+              onClick={() => fileInputRef.current?.click()}
+            >
+              Subir Imagen
+            </Button>
+            <input
+              ref={fileInputRef} // se utiliza el useRef para hacer referencia al botón que queremes realmente que haga la acción
+              type='file'
+              multiple
+              accept='image/png, image/gif, image/jpeg'
+              style={{ display: 'none' }}
+              onChange={onFileSelected}
+            />
+
+            <Card>
+              <CardMedia
+                component='img'
+                className='fadeIn'
+                image={'/clients/1.jpg'}
+                height={300}
+                alt={getValues('profilePicture')}
               />
-
-
-              <Grid container spacing={2} marginTop='2px'>
-                <Grid item xs={4} sm={3}>
-                  <Card>
-                    <CardMedia
-                      component='img'
-                      className='fadeIn'
-                      image={'/clients/1.jpg'}
-                      alt={getValues('profilePicture')}
-                    />
-                    <CardActions>
-                      <Button
-                        fullWidth
-                        color="error"
-                        sx={{ ":hover": { color: 'black' } }}
-                        onClick={() => onDeleteImage()}
-                      >
-                        Delete
-                      </Button>
-                    </CardActions>
-                  </Card>
-                </Grid>
-              </Grid>
-
-            </Box>
+              <CardActions sx={{ justifyContent: 'center' }}>
+                <Button
+                  color="error"
+                  sx={{ ":hover": { color: 'black' } }}
+                  size='large'
+                  startIcon={<DeleteOutline fontSize='large' />}
+                  onClick={() => onDeleteImage()}
+                >
+                  Borrar Selección
+                </Button>
+              </CardActions>
+            </Card>
 
           </Grid>
 
@@ -260,4 +255,4 @@ export const register = () => {
     </DashboardLayaout>
   )
 }
-export default register;
+export default RegisterClientPage;

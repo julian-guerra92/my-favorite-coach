@@ -112,7 +112,7 @@ export const SideMenu = () => {
 
                         <ListItemButton
                            sx={{ display: { xs: '', sm: '', md: 'none' } }}
-                           onClick={() => navigateTo('/')}
+                           onClick={() => navigateTo('/exercises')}
                         >
                            <ListItemIcon>
                               <FitnessCenterOutlined />

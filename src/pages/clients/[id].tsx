@@ -12,7 +12,7 @@ interface Props {
    user: IUser;
 }
 
-export const ClientPage: FC<Props> = ({ user }) => {
+const ClientPage: FC<Props> = ({ user }) => {
 
 
 

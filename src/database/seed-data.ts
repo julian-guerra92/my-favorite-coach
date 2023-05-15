@@ -18,11 +18,12 @@ interface SeedUser {
 }
 
 interface SeedExercise {
+   id: string;
    title: string;
    description: string;
    calories: Number;
    intensity: string;
-   video: string;
+   referenceImage: string;
 }
 
 interface SeedWorkout {
@@ -35,6 +36,7 @@ interface SeedWorkout {
 
 interface SeedData {
    users: SeedUser[];
+   exercises: SeedExercise[];
 }
 
 export const initialData: SeedData = {
@@ -145,6 +147,40 @@ export const initialData: SeedData = {
          height: 1.70,
          profilePicture: '6.jpg',
          active: true
+      }
+   ],
+   exercises: [
+      {
+         id: '1',
+         title: 'correr en el sitio',
+         description: 'simular estar corriendo, con el movimiento típico de elevación de las rodillas, pero sin realizar ningún desplazamiento.',
+         calories:50,
+         intensity: 'baja',
+         referenceImage: '1.gif'
+      },
+      {
+         id: '2',
+         title: 'plancha de antebrazo',
+         description: 'Tumbarse boca abajo y levantar el cuerpo únicamente apoyando en el suelo sus antebrazos (formando un ángulo recto con el hombro) y las puntas de ambos pies.',
+         calories:30,
+         intensity: 'baja',
+         referenceImage: '2.gif'
+      },
+      {
+         id: '3',
+         title: 'sentadilla con brazos hacia adelante',
+         description: 'comenzando de pie, separando sus piernas a la altura de los hombros y con los pies hacia fuera. Estira los brazos hacia adelante y flexiona tus rodillas hacia abajo, contrayendo los glúteos. Posteriormente, sube de manera progresiva.',
+         calories:50,
+         intensity: 'media',
+         referenceImage: '3.gif'
+      },
+      {
+         id: '4',
+         title: 'jumpin jakcs',
+         description: 'colocarse de pie con las piernas separadas a la altura de los hombros. Realiza saltos en los que se debe separar las piernas y juntarlas sucesivamente. Los brazos también trabajan en este ejercicio, extendiéndolos hacia los lados y subirlos y bajarlos en cada salto.',
+         calories:50,
+         intensity: 'alta',
+         referenceImage: '4.gif'
       }
    ]
 }
