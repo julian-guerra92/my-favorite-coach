@@ -1,28 +1,39 @@
 
 import { FC } from 'react';
 import { GetStaticPaths, GetStaticProps } from 'next';
-import { Divider, Typography } from '@mui/material';
+import { Box, Button, Grid } from '@mui/material';
+import { EditOutlined } from '@mui/icons-material';
 
 import { initialData } from '../../database/seed-data';
-import { IUser } from '../../interface';
+import { IExercise } from '../../interface';
 import { DashboardLayaout } from '../../components/layouts';
-import { UserProfile } from '../../components/users';
+import { ExerciseDescription } from '../../components/exercises';
 
 interface Props {
-   user: IUser;
+   exercise: IExercise;
 }
 
-const ClientPage: FC<Props> = ({ user }) => {
-
-
+const ExercisePage: FC<Props> = ({ exercise }) => {
 
    return (
-      <DashboardLayaout title={`${user.firstName} ${user.lastName}`} pageDescription={'Información detallada del cliente'}>
-         <UserProfile user={user} />
-         <Divider variant='middle' />
+      <DashboardLayaout title={`${exercise.title}`} pageDescription={'Información detallada de cada ejercicio'}>
 
-         {/* //TODO: Crear componente para visualizar actividades asiganas */}
-         <Typography variant='h1' component='h1' marginTop='30px'>Actividades Asiganadas:</Typography>
+         <Box display='flex' justifyContent='right'>
+            <Button
+               className='circular-btn'
+               color='secondary'
+               startIcon={<EditOutlined />}
+               size='large'
+            >
+               Editar Ejercicio
+            </Button>
+         </Box>
+
+         <Grid container display='flex' justifyContent='center' marginTop={3}>
+            <Box width={600}>
+               <ExerciseDescription exercise={exercise} />
+            </Box>
+         </Grid>
 
       </DashboardLayaout>
    )
@@ -31,9 +42,9 @@ const ClientPage: FC<Props> = ({ user }) => {
 //*Método para la creación de los paths de las distinas páginas de la App (tener en cuenta llaves en el nombre del archivo)
 //TODO: Realizar petición a la base de datos para cargar la información correspondiente
 export const getStaticPaths: GetStaticPaths = async (ctx) => {
-   const users = initialData.users;
+   const exercises = initialData.exercises;
    return {
-      paths: users.map(({ id }) => ({
+      paths: exercises.map(({ id }) => ({
          params: { id }
       })),
       fallback: "blocking"
@@ -44,8 +55,8 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => {
 //TODO: Realizar petición a la base de datos para cargar la información correspondiente
 export const getStaticProps: GetStaticProps = async ({ params }) => {
    const { id = '' } = params as { id: string };
-   const user = initialData.users.find(user => user.id === id);
-   if (!user) {
+   const exercise = initialData.exercises.find(exercise => exercise.id === id);
+   if (!exercise) {
       return {
          redirect: {
             destination: '/',
@@ -55,10 +66,10 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
    }
    return {
       props: {
-         user
+         exercise
       },
       revalidate: 86400, //*Revalida el contenido de la paǵina en este tiempo determinado
    }
 }
 
-export default ClientPage;
+export default ExercisePage;

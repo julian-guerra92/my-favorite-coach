@@ -1,12 +1,12 @@
 
 import React from 'react';
 import NextLink from 'next/link';
-import { Box, Button, CardMedia, Grid, IconButton, Link, Typography, capitalize } from '@mui/material';
+import { CardMedia, Grid, IconButton, Link, Typography, capitalize } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { AddOutlined } from '@mui/icons-material';
 
 import { DashboardLayaout } from '../../components/layouts/DashboardLayaout';
-import { initialData } from '@/database/seed-data';
-import { AddOutlined } from '@mui/icons-material';
+import { initialData } from '../../database/seed-data';
 
 const columns: GridColDef[] = [
    { field: 'id', headerName: 'ID', width: 60, headerAlign: 'center', align: 'center' },
