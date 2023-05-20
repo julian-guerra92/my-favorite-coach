@@ -28,7 +28,7 @@ export const UserProfile: FC<Props> = ({ user }) => {
                   />
                )
             }
-            <Card>
+            <Card className='summary-card'>
                <CardMedia
                   component='img'
                   className='fadeIn'

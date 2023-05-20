@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import { Box, Button, Chip, CircularProgress, Grid, TextField, Typography } from '@mui/material';
 import { ErrorOutline } from '@mui/icons-material';
@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 
 import { AuthLayout } from '../components/layouts';
 import { validations } from '../utils';
+import { AuthContext } from '../context/auth';
 
 type FormData = {
   email: string,
@@ -15,6 +16,8 @@ type FormData = {
 };
 
 export default function HomePage() {
+
+  const { loginUser } = useContext(AuthContext)
 
   const { register, handleSubmit, formState: { errors } } = useForm<FormData>();
 
@@ -34,15 +37,15 @@ export default function HomePage() {
   }, [router, hasError])
 
   const onLoginUser = async ({ email, password }: FormData) => {
-      // const isValidLogin = await loginUser(email, password);
-      // if (!isValidLogin) {
-      //    setShowError(true);
-      //    setTimeout(() => setShowError(false), 3000);
-      //    return;
-      // }
-      setIsLoading(true);
-      const pageDestination = router.query.p?.toString() || '/dashboard';
-      router.replace(pageDestination);
+    const isValidLogin = await loginUser(email, password);
+    if (!isValidLogin) {
+      setShowError(true);
+      setTimeout(() => setShowError(false), 3000);
+      return;
+    }
+    setIsLoading(true);
+    const pageDestination = router.query.p?.toString() || '/dashboard';
+    router.replace(pageDestination);
   }
 
   return (

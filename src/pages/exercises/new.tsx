@@ -38,22 +38,9 @@ const NewExercisePage = () => {
    return (
       <DashboardLayaout title={'Registro de Nuevo Cliente'} pageDescription={'Registro de un nuevo cliente en la aplicación'}>
 
-         <Typography variant='h1' component='h1' marginTop='30px'>Crear Nuevo Ejercicio:</Typography>
+         <Typography variant='h1' component='h1' marginTop='30px' marginBottom='15px'>Crear Nuevo Ejercicio</Typography>
 
          <form onSubmit={handleSubmit(onSubmit)}>
-            <Box display='flex' justifyContent='end' sx={{ mb: 1 }}>
-               <Button
-                  color="secondary"
-                  className='circular-btn'
-                  startIcon={<SaveOutlined fontSize='large' />}
-                  sx={{ width: '150px' }}
-                  type="submit"
-                  size='large'
-                  disabled={isSaving}
-               >
-                  Guardar
-               </Button>
-            </Box>
 
             <Grid container spacing={2}>
 
@@ -77,7 +64,7 @@ const NewExercisePage = () => {
                      variant="filled"
                      fullWidth
                      multiline
-                     rows={6}
+                     rows={8}
                      sx={{ mb: 1 }}
                      {...register('description', {
                         required: 'Este Campo es Requerido!',
@@ -101,7 +88,9 @@ const NewExercisePage = () => {
                      helperText={errors.calories?.message}
                   />
 
-                  <FormControl sx={{ mt: 2 }}>
+                  <Divider sx={{ my: 2 }} />
+
+                  <FormControl >
                      <FormLabel>Intensidad del Ejercicio</FormLabel>
                      <RadioGroup
                         row
@@ -121,14 +110,18 @@ const NewExercisePage = () => {
                      </RadioGroup>
                   </FormControl>
 
-                  <Divider sx={{ my: 2 }} />
+               </Grid>
+
+               <Grid item xs={12} sm={12} md={5}>
+
+                  <FormLabel >Imagen de Referencia (jpge, png o gif)</FormLabel>
 
                   <Button
                      color="secondary"
                      fullWidth
                      startIcon={<UploadOutlined fontSize='large' />}
                      className='circular-btn'
-                     sx={{ mb: 3 }}
+                     sx={{ mt: 1, mb: 1 }}
                      size='large'
                      onClick={() => fileInputRef.current?.click()}
                   >
@@ -143,18 +136,13 @@ const NewExercisePage = () => {
                      onChange={onFileSelected}
                   />
 
-               </Grid>
-
-               <Grid item xs={12} sm={12} md={5}>
-
-                  <FormLabel >Imagen de Referencia (jpge, png o gif)</FormLabel>
                   <Card sx={{ marginTop: 1 }}>
                      <CardMedia
                         component='img'
                         className='fadeIn'
                         image={'/exercises/1.gif'}
                         alt={getValues('referenceImage')}
-                        height={350}
+                        height={250}
                      />
                      <CardActions sx={{ justifyContent: 'center' }}>
                         <Button
@@ -172,6 +160,19 @@ const NewExercisePage = () => {
                </Grid>
 
             </Grid>
+            <Box display='flex' justifyContent='end' sx={{ mb: 1 }}>
+               <Button
+                  color="secondary"
+                  className='circular-btn'
+                  startIcon={<SaveOutlined fontSize='large' />}
+                  sx={{ width: '150px', mt: 2 }}
+                  type="submit"
+                  size='large'
+                  disabled={isSaving}
+               >
+                  Guardar
+               </Button>
+            </Box>
          </form>
 
       </DashboardLayaout>

@@ -24,12 +24,12 @@ export const DashboardCoach = () => {
             />
             <SummaryTile
                title={'30'}
-               subTitle="Asignación Semana Anterior"
+               subTitle="Actividades Semana Anterior"
                icon={<AssignmentTurnedInOutlined color='secondary' sx={{ fontSize: 80 }} />}
             />
             <SummaryTile
                title={'20'}
-               subTitle="Asignación Semana Actual"
+               subTitle="Actividades Semana Actual"
                icon={<AssignmentTurnedInOutlined color='warning' sx={{ fontSize: 80 }} />}
             />
             <SummaryTile

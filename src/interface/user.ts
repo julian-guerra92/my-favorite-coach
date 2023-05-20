@@ -1,5 +1,6 @@
 
 import { IWorkout } from ".";
+import { IRole } from "./role";
 
 export interface IUser {
    id?: string;
@@ -9,7 +10,7 @@ export interface IUser {
    email: string;
    password: string;
    phoneNumber: string;
-   role?: string;
+   role?: IRole;
    gender: string;
    age: Number;
    weight?: Number;

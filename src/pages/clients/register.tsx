@@ -44,22 +44,9 @@ const RegisterClientPage = () => {
   return (
     <DashboardLayaout title={'Registro de Nuevo Cliente'} pageDescription={'Registro de un nuevo cliente en la aplicación'}>
 
-      <Typography variant='h1' component='h1' marginTop='30px'>Registro Nuevo Cliente:</Typography>
+      <Typography variant='h1' component='h1' marginTop='30px' marginBottom='15px'>Registro Nuevo Cliente</Typography>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box display='flex' justifyContent='end' sx={{ mb: 1 }}>
-          <Button
-            color="secondary"
-            className='circular-btn'
-            startIcon={<SaveOutlined fontSize='large' />}
-            sx={{ width: '150px' }}
-            type="submit"
-            size='large'
-            disabled={isSaving}
-          >
-            Guardar
-          </Button>
-        </Box>
 
         <Grid container spacing={2}>
 
@@ -133,34 +120,46 @@ const RegisterClientPage = () => {
               helperText={errors.password?.message}
             />
 
-            {/* //TODO: Esto debe ser fecha de nacimiento */}
-            <TextField
-              label="Edad"
-              type='number'
-              variant="filled"
-              fullWidth
-              sx={{ mb: 1 }}
-              {...register('age', {
-                required: 'Este Campo es Requerido!',
-                min: { value: 1, message: 'La edad debe ser mayor o igual a 1' }
-              })}
-              error={!!errors.age}
-              helperText={errors.age?.message}
-            />
+            <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+              {/* //TODO: Esto debe ser fecha de nacimiento */}
+              <TextField
+                label="Edad"
+                type='number'
+                variant="filled"
+                {...register('age', {
+                  required: 'Este Campo es Requerido!',
+                  min: { value: 1, message: 'La edad debe ser mayor o igual a 1' }
+                })}
+                error={!!errors.age}
+                helperText={errors.age?.message}
+              />
 
-            <TextField
-              label="Peso"
-              type='number'
-              variant="filled"
-              fullWidth
-              sx={{ mb: 1 }}
-              {...register('weight', {
-                required: 'Este Campo es Requerido!',
-                min: { value: 1, message: 'El peso debe ser mayor o igual a 1' }
-              })}
-              error={!!errors.weight}
-              helperText={errors.weight?.message}
-            />
+              <TextField
+                label="Peso"
+                type='number'
+                variant="filled"
+                sx={{ ml: 1 }}
+                {...register('weight', {
+                  required: 'Este Campo es Requerido!',
+                  min: { value: 1, message: 'El peso debe ser mayor o igual a 1' }
+                })}
+                error={!!errors.weight}
+                helperText={errors.weight?.message}
+              />
+
+              <TextField
+                label="Altura"
+                type='number'
+                variant="filled"
+                sx={{ ml: 1 }}
+                {...register('height', {
+                  required: 'Este Campo es Requerido!',
+                  min: { value: 1, message: 'La altura debe ser mayor o igual a 1' }
+                })}
+                error={!!errors.height}
+                helperText={errors.height?.message}
+              />
+            </Box>
 
             <Divider sx={{ my: 1 }} />
 
@@ -188,30 +187,14 @@ const RegisterClientPage = () => {
 
           <Grid item xs={12} sm={6}>
 
-            <TextField
-              label="Altura"
-              type='number'
-              variant="filled"
-              fullWidth
-              sx={{ mb: 1 }}
-              {...register('height', {
-                required: 'Este Campo es Requerido!',
-                min: { value: 1, message: 'La altura debe ser mayor o igual a 1' }
-              })}
-              error={!!errors.height}
-              helperText={errors.height?.message}
-            />
-
-            <Divider sx={{ my: 2 }} />
-
-            <FormLabel sx={{ marginBottom: 1 }}>Foto de Perfil</FormLabel>
+            <FormLabel>Foto de Perfil</FormLabel>
 
             <Button
               color="secondary"
               fullWidth
               startIcon={<UploadOutlined fontSize='large' />}
               className='circular-btn'
-              sx={{ mb: 3 }}
+              sx={{ mt: 1, mb: 2 }}
               size='large'
               onClick={() => fileInputRef.current?.click()}
             >
@@ -250,6 +233,20 @@ const RegisterClientPage = () => {
           </Grid>
 
         </Grid>
+
+        <Box display='flex' justifyContent='end' sx={{ mb: 1 }}>
+          <Button
+            color="secondary"
+            className='circular-btn'
+            startIcon={<SaveOutlined fontSize='large' />}
+            sx={{ width: '150px', mt: 2 }}
+            type="submit"
+            size='large'
+            disabled={isSaving}
+          >
+            Guardar
+          </Button>
+        </Box>
       </form>
 
     </DashboardLayaout>

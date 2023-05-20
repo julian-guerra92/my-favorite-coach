@@ -65,7 +65,7 @@ export const initialData: SeedData = {
          age: 25,
          weight: 80,
          height: 1.70,
-         profilePicture: '1.jpg',
+         profilePicture: 'https://res.cloudinary.com/dwhvmsbsc/image/upload/v1684522606/my-favorite-coach/emnanj3bx7gr7ni8xmon.jpg',
          active: true
       },
       {
