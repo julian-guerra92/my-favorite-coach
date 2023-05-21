@@ -7,24 +7,16 @@ import {
 } from "@mui/icons-material";
 import { DashboardOutlined } from '@mui/icons-material';
 
-import { UiContext } from "../../context";
+import { AuthContext, UiContext } from "../../context";
 
 
 export const SideMenu = () => {
-
-   const user = {
-      role: 'coach'
-   }
-
-   const logout = () => {
-
-   }
 
    const router = useRouter();
 
    const { isMenuOpen, toggleSideMenu } = useContext(UiContext);
 
-   // const { isLoggedIn, user, logout } = useContext(AuthContext);
+   const { isLoggedIn, user, logout } = useContext(AuthContext);
 
    const [searchTerm, setSearchTerm] = useState('');
 
@@ -41,6 +33,12 @@ export const SideMenu = () => {
    const onSearchTerm = () => {
       if (searchTerm.trim().length === 0) return;
       navigateTo(`/search/${searchTerm}`);
+   }
+
+   const onLogout = (url: string) => {
+      logout();
+      toggleSideMenu();
+      router.replace(url);
    }
 
    return (
@@ -98,7 +96,7 @@ export const SideMenu = () => {
 
                {/* Vista Entrenador */}
                {
-                  user.role === 'coach' && (
+                  user?.role?.description === 'coach' && (
                      <>
                         <ListItemButton
                            sx={{ display: { xs: '', sm: '', md: 'none' } }}
@@ -135,7 +133,7 @@ export const SideMenu = () => {
 
                {/* Vista Usuario */}
                {
-                  user?.role === 'user' && (
+                  user?.role?.description === 'user' && (
                      <>
                         <ListItemButton
                            sx={{ display: { xs: '', sm: '', md: 'none' } }}
@@ -160,7 +158,7 @@ export const SideMenu = () => {
                   )
                }
 
-               <ListItemButton onClick={logout}>
+               <ListItemButton onClick={() => onLogout('/')}>
                   <ListItemIcon>
                      <LoginOutlined />
                   </ListItemIcon>
@@ -173,4 +171,4 @@ export const SideMenu = () => {
    )
 }
 
-//TODO: Proteger esta ruta dependiendo de la autenticación del usuario
+//TODO: Validar vista con el JWT para verificar perfil de usuario

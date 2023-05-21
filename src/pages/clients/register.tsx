@@ -1,11 +1,13 @@
 
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, FC, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { DeleteOutline, SaveOutlined, UploadOutlined } from '@mui/icons-material';
 import { Box, Button, Card, CardActions, CardMedia, Divider, FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, TextField, Typography, capitalize } from '@mui/material';
 
 import { DashboardLayaout } from '../../components/layouts';
 import { validations } from '../../utils';
+import { IUser } from '../../interface';
+import { myFavoriteCoachNextApi } from '../../api';
 
 const validGender = ['masculono', 'femenino', 'no especificar'];
 
@@ -23,18 +25,51 @@ interface FormData {
   profilePicture?: string;
 }
 
-const RegisterClientPage = () => {
+interface Props {
+  user: IUser;
+}
+
+const RegisterClientPage: FC<Props> = ({ user }) => {
 
   const [isSaving, setIsSaving] = useState(false);
+
+  const [isLoading, setIsLoading] = useState(false);
+
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { register, handleSubmit, formState: { errors }, getValues, setValue, watch } = useForm<FormData>({})
+
+  const { register, handleSubmit, formState: { errors }, getValues, setValue, watch } = useForm<FormData>({ defaultValues: user })
 
   const onFileSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
-    //TODO: implementar lógica
+    if (!target.files || target.files.length === 0) {
+      return;
+    }
+    try {
+      setIsLoading(true);
+      const formData = new FormData();
+      formData.append('file', target.files[0]);
+      const { data } = await myFavoriteCoachNextApi.post<{ message: string }>('/uploadImage', formData);
+      setValue('profilePicture', data.message, { shouldValidate: true })
+    } catch (error) {
+      console.log({ error });
+    }
   }
 
-  const onDeleteImage = () => {
-    //TODO: implementar lógica
+  const onDeleteImage = async () => {
+    try {
+      const imageUrl = getValues('profilePicture');
+      await myFavoriteCoachNextApi.post('/deleteImage', {
+        data: imageUrl
+      });
+      setValue(
+        'profilePicture',
+        undefined,
+        { shouldValidate: true }
+      )
+      setIsLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+
   }
 
   const onSubmit = () => {
@@ -194,8 +229,9 @@ const RegisterClientPage = () => {
               fullWidth
               startIcon={<UploadOutlined fontSize='large' />}
               className='circular-btn'
-              sx={{ mt: 1, mb: 2 }}
+              sx={{ mt: 1, mb: 2, display: getValues('profilePicture') ? 'none' : 'flex' }}
               size='large'
+              disabled={isLoading}
               onClick={() => fileInputRef.current?.click()}
             >
               Subir Imagen
@@ -203,18 +239,17 @@ const RegisterClientPage = () => {
             <input
               ref={fileInputRef} // se utiliza el useRef para hacer referencia al botón que queremes realmente que haga la acción
               type='file'
-              multiple
               accept='image/png, image/gif, image/jpeg'
               style={{ display: 'none' }}
               onChange={onFileSelected}
             />
 
-            <Card>
+            <Card sx={{ display: getValues('profilePicture') ? 'block' : 'none' }}>
               <CardMedia
                 component='img'
                 className='fadeIn'
-                image={'/clients/1.jpg'}
-                height={300}
+                image={getValues('profilePicture')}
+                height={380}
                 alt={getValues('profilePicture')}
               />
               <CardActions sx={{ justifyContent: 'center' }}>

@@ -1,7 +1,9 @@
 
-import { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren, useContext } from 'react';
 import Head from 'next/head';
+
 import { ClientNavbar, AdminNavbar, SideMenu } from '../ui';
+import { AuthContext } from '../../context/auth';
 
 interface Props {
    title: string;
@@ -11,9 +13,7 @@ interface Props {
 
 export const DashboardLayaout: FC<PropsWithChildren<Props>> = ({ children, title, pageDescription, imageFullUrl }) => {
 
-   const user = {
-      role: 'coach'
-   }
+   const { user } = useContext(AuthContext);
 
    return (
       <>
@@ -28,7 +28,7 @@ export const DashboardLayaout: FC<PropsWithChildren<Props>> = ({ children, title
          </Head>
          <nav>
             {
-               user.role === 'coach' ? (
+               user?.role?.description === 'coach' ? (
                   <AdminNavbar />
                ) : (
                   <ClientNavbar />

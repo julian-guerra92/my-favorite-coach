@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 
 import { AuthContext, authReducer } from './';
 import { IUser } from '../../interface';
-import { myFavoriteCoachApi } from '../../api';
+import { dbUsers } from '../../database';
 
 export interface AuthState {
    isLoggedIn: boolean;
@@ -34,9 +34,9 @@ export const AuthProvider = ({ children }: Props) => {
 
    const loginUser = async (email: string, password: string): Promise<boolean> => {
       try {
-         const { data } = await myFavoriteCoachApi.post('/auth/login', { email, password });
-         dispatch({ type: 'Auth - Login', payload: data });
-         Cookies.set('userId', data.id); //TODO: Deberá ser con el token JWT
+         const user = await dbUsers.validateCredentials(email, password);
+         dispatch({ type: 'Auth - Login', payload: user });
+         Cookies.set('userId', user.id || ''); //TODO: Deberá ser con el token JWT
          return true;
       } catch (error) {
          return false;
@@ -56,13 +56,13 @@ export const AuthProvider = ({ children }: Props) => {
          router.replace('/');
          return;
       }
-      const { data } = await myFavoriteCoachApi.get(`/user?id=${id}`);
-      if (!data) {
+      try {
+         const user = await dbUsers.getUserById(id);
+         dispatch({ type: 'Auth - Login', payload: user });
+      } catch (error) {
          dispatch({ type: 'Auth - Logout' });
          router.replace('/');
-         return;
       }
-      dispatch({ type: 'Auth - Login', payload: data });
    }
 
    return (

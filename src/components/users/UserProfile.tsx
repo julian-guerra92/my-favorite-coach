@@ -32,7 +32,7 @@ export const UserProfile: FC<Props> = ({ user }) => {
                <CardMedia
                   component='img'
                   className='fadeIn'
-                  image={`/clients/${user.profilePicture}`}
+                  image={user.profilePicture}
                   alt={user.firstName}
                   height={400}
                />
