@@ -10,7 +10,7 @@ export const DashboardPage = () => {
 
   const { user } = useContext(AuthContext)
 
-  if(!user) return <></>;
+  if (!user) return <></>;
 
   return (
     <DashboardLayaout title={'My Favorite Coach - Dashboard'} pageDescription={'Entrenamiento personalizado para mejorar tu salud'}>

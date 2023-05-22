@@ -18,6 +18,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
          })
    }
 }
+
 const deleteFile = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
    const { data } = req.body;
    const publicId = data.match(/\/v\d+\/(.+)\./)[1];

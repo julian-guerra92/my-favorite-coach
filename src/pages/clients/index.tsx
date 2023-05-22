@@ -31,7 +31,7 @@ const ClientListPage = () => {
                : <ClientsList users={users} />
          }
          <IconButton
-            href='clients/register'
+            href='clients/administration'
             size='large'
             sx={{
                color: 'white',

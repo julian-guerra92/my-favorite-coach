@@ -1,12 +1,14 @@
 
-import React from 'react';
+import React, { FC } from 'react';
+import { GetServerSideProps } from 'next';
 import NextLink from 'next/link';
 import { CardMedia, Grid, IconButton, Link, Typography, capitalize } from '@mui/material';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { AddOutlined } from '@mui/icons-material';
 
 import { DashboardLayaout } from '../../components/layouts/DashboardLayaout';
-import { initialData } from '../../database/seed-data';
+import { dbExercise } from '../../database';
+import { IExercise } from '../../interface';
 
 const columns: GridColDef[] = [
    { field: 'id', headerName: 'ID', width: 60, headerAlign: 'center', align: 'center' },
@@ -23,7 +25,7 @@ const columns: GridColDef[] = [
                   height='60'
                   component='img'
                   className='fadeIn'
-                  image={`/exercises/${row.img}`}
+                  image={row.img}
                />
             </a>
          )
@@ -55,11 +57,13 @@ const columns: GridColDef[] = [
    }
 ]
 
-const ExercisesPage = () => {
+interface Props {
+   exercises: IExercise[]
+}
 
-   //TODO: Leer la información de los ejercicios de la base de datos
+const ExercisesPage: FC<Props> = ({ exercises }) => {
 
-   const rows = initialData.exercises.map(exercise => ({
+   const rows = exercises.map(exercise => ({
       id: exercise.id,
       img: exercise.referenceImage,
       title: exercise.title,
@@ -88,7 +92,7 @@ const ExercisesPage = () => {
             </Grid>
          </Grid>
          <IconButton
-            href='exercises/new'
+            href='exercises/administration'
             size='large'
             sx={{
                color: 'white',
@@ -103,6 +107,25 @@ const ExercisesPage = () => {
          </IconButton>
       </DashboardLayaout>
    )
+}
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+   try {
+      const exercises = await dbExercise.getAll();
+      return {
+         props: {
+            exercises
+         }
+      }
+   } catch (error) {
+      console.log(error)
+      return {
+         redirect: {
+            destination: '/dashboard',
+            permanent: false,
+         }
+      }
+   }
 }
 
 export default ExercisesPage;

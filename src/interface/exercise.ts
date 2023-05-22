@@ -5,5 +5,5 @@ export interface IExercise {
    description: string;
    calories: Number;
    intensity: string;
-   referenceImage: string;
+   referenceImage?: string;
 }

@@ -1,10 +1,21 @@
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Grid } from '@mui/material';
 import { SummaryTile } from '../admin';
 import { AccessTimeOutlined, AssignmentOutlined, AssignmentTurnedInOutlined, FitnessCenterOutlined, GroupOutlined, TaskAltOutlined, TimerOutlined } from '@mui/icons-material';
 
 export const DashBoardClient = () => {
+
+   const [refreshIn, setrefreshIn] = useState(60);
+
+   useEffect(() => {
+      const interval = setInterval(() => {
+         console.log('Tick');
+         setrefreshIn(refreshIn => refreshIn > 0 ? refreshIn - 1 : 60);
+      }, 1000);
+      return () => clearInterval(interval);
+   }, []);
+
    return (
       <Box className='fadeIn'
          display='flex'
@@ -38,7 +49,7 @@ export const DashBoardClient = () => {
                icon={<TaskAltOutlined color='success' sx={{ fontSize: 80 }} />}
             />
             <SummaryTile
-               title={'60'}
+               title={refreshIn}
                subTitle="Actualización en:"
                icon={<AccessTimeOutlined color='secondary' sx={{ fontSize: 80 }} />}
             />

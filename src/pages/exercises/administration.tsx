@@ -1,44 +1,93 @@
 
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, FC, useRef, useState } from 'react';
+import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { DeleteOutline, SaveOutlined, UploadOutlined } from '@mui/icons-material';
-import { Box, Button, Card, CardActions, CardMedia, Divider, FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, TextField, Typography, capitalize } from '@mui/material';
+import { Alert, Box, Button, Card, CardActions, CardMedia, CircularProgress, Divider, FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, Stack, TextField, Typography, capitalize } from '@mui/material';
 
 import { DashboardLayaout } from '../../components/layouts';
 import { validations } from '../../utils';
+import { FormDataExercise, IExercise } from '../../interface';
+import { dbExercise } from '../../database';
+import { myFavoriteCoachNextApi } from '../../api';
 
-const validIntensity = ['bajo', 'medio', 'alto'];
+const validIntensity = ['baja', 'media', 'alta'];
 
-interface FormData {
-   title: string;
-   description: string;
-   calories: Number;
-   intensity: string;
-   referenceImage: string;
+interface Props {
+   exercise: IExercise
 }
 
-const NewExercisePage = () => {
+const AdministrationExercisePage: FC<Props> = ({ exercise }) => {
 
    const [isSaving, setIsSaving] = useState(false);
+
+   const [isLoading, setIsLoading] = useState(false);
+
+   const [showError, setShowError] = useState(false);
+
+   const router = useRouter();
+
    const fileInputRef = useRef<HTMLInputElement>(null);
-   const { register, handleSubmit, formState: { errors }, getValues, setValue, watch } = useForm<FormData>({})
+
+   const { register, handleSubmit, formState: { errors }, getValues, setValue, watch } = useForm<FormDataExercise>({defaultValues: exercise})
 
    const onFileSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
-      //TODO: implementar lógica
+      if (!target.files) {
+         return;
+      }
+      try {
+         setIsLoading(true);
+         const formData = new FormData();
+         formData.append('file', target.files[0]);
+         const { data } = await myFavoriteCoachNextApi.post<{ message: string }>('/uploadImage', formData);
+         setValue('referenceImage', data.message, { shouldValidate: true })
+      } catch (error) {
+         console.log({ error });
+      }
    }
 
-   const onDeleteImage = () => {
-      //TODO: implementar lógica
+   const onDeleteImage = async () => {
+      try {
+         const imageUrl = getValues('referenceImage');
+         await myFavoriteCoachNextApi.post('/deleteImage', { data: imageUrl });
+         setValue(
+            'referenceImage',
+            undefined,
+            { shouldValidate: true }
+         )
+         setIsLoading(false);
+      } catch (error) {
+         console.log(error);
+      }
    }
 
-   const onSubmit = () => {
-      //TODO: implementar lógica
+   const onSubmit = async (formData: FormDataExercise) => {
+      if (!formData.referenceImage) {
+         setShowError(true);
+         setTimeout(() => setShowError(false), 4000);
+         return;
+      }
+      try {
+         setIsSaving(true);
+         let newExercise: IExercise;
+         if (exercise) {
+            exercise = { ...formData }
+            newExercise = await dbExercise.update(exercise);
+         } else {
+            newExercise = await dbExercise.create(formData);
+         }
+         router.replace(`/exercises/${newExercise.id}`)
+      } catch (error) {
+         console.log(error);
+         setIsSaving(false);
+      }
    }
 
    return (
       <DashboardLayaout title={'Registro de Nuevo Cliente'} pageDescription={'Registro de un nuevo cliente en la aplicación'}>
 
-         <Typography variant='h1' component='h1' marginTop='30px' marginBottom='15px'>Crear Nuevo Ejercicio</Typography>
+         <Typography variant='h1' component='h1' marginTop='30px' marginBottom='15px'>Crear o Editar Ejercicio</Typography>
 
          <form onSubmit={handleSubmit(onSubmit)}>
 
@@ -119,13 +168,20 @@ const NewExercisePage = () => {
                   <Button
                      color="secondary"
                      fullWidth
-                     startIcon={<UploadOutlined fontSize='large' />}
+                     startIcon={<UploadOutlined fontSize='large' sx={{ display: isLoading ? 'none' : 'flex' }} />}
                      className='circular-btn'
-                     sx={{ mt: 1, mb: 1 }}
+                     sx={{ mt: 1, mb: 1, display: getValues('referenceImage') ? 'none' : 'flex' }}
                      size='large'
+                     disabled={isLoading}
                      onClick={() => fileInputRef.current?.click()}
                   >
-                     Subir Imagen de Referencia
+                     {
+                        isLoading
+                           ? (
+                              <CircularProgress color='inherit' size={25} />
+                           )
+                           : 'Subir Imagen de Referencia'
+                     }
                   </Button>
                   <input
                      ref={fileInputRef} // se utiliza el useRef para hacer referencia al botón que queremes realmente que haga la acción
@@ -136,13 +192,13 @@ const NewExercisePage = () => {
                      onChange={onFileSelected}
                   />
 
-                  <Card sx={{ marginTop: 1 }}>
+                  <Card sx={{ display: getValues('referenceImage') ? 'block' : 'none' }}>
                      <CardMedia
                         component='img'
                         className='fadeIn'
-                        image={'/exercises/1.gif'}
+                        image={getValues('referenceImage')}
                         alt={getValues('referenceImage')}
-                        height={250}
+                        height={350}
                      />
                      <CardActions sx={{ justifyContent: 'center' }}>
                         <Button
@@ -156,6 +212,12 @@ const NewExercisePage = () => {
                         </Button>
                      </CardActions>
                   </Card>
+
+                  <Stack sx={{ width: '100%', display: showError ? 'flex' : 'none' }} spacing={2}>
+                     <Alert variant="filled" severity="warning">
+                        Se requiere agregar una foto de perfil!
+                     </Alert>
+                  </Stack>
 
                </Grid>
 
@@ -178,4 +240,28 @@ const NewExercisePage = () => {
       </DashboardLayaout>
    )
 }
-export default NewExercisePage;
+
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+   const { id } = query;
+   if (!id) return { props: {} };
+   try {
+      const exercise = await dbExercise.getById(`${id}`);
+      return {
+         props: {
+            exercise
+         }
+      }
+   } catch (error) {
+      console.log(error);
+      return {
+         redirect: {
+            destination: '/exercises',
+            permanent: false,
+         }
+      }
+   }
+}
+
+export default AdministrationExercisePage;
+
+//TODO: Optimizar la creación de esta página junto con el correspondiente a los usuarios

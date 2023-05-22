@@ -1,19 +1,26 @@
 
 import { FC } from 'react';
 import { GetStaticPaths, GetStaticProps } from 'next';
+import { useRouter } from 'next/router';
 import { Box, Button, Grid } from '@mui/material';
 import { EditOutlined } from '@mui/icons-material';
 
-import { initialData } from '../../database/seed-data';
 import { IExercise } from '../../interface';
 import { DashboardLayaout } from '../../components/layouts';
 import { ExerciseDescription } from '../../components/exercises';
+import { dbExercise } from '../../database';
 
 interface Props {
    exercise: IExercise;
 }
 
 const ExercisePage: FC<Props> = ({ exercise }) => {
+
+   const router = useRouter();
+
+   const handlreRedirect = () => {
+      router.replace(`/exercises/administration?id=${exercise.id}`);
+   }
 
    return (
       <DashboardLayaout title={`${exercise.title}`} pageDescription={'Información detallada de cada ejercicio'}>
@@ -24,6 +31,7 @@ const ExercisePage: FC<Props> = ({ exercise }) => {
                color='secondary'
                startIcon={<EditOutlined />}
                size='large'
+               onClick={handlreRedirect}
             >
                Editar Ejercicio
             </Button>
@@ -40,22 +48,20 @@ const ExercisePage: FC<Props> = ({ exercise }) => {
 }
 
 //*Método para la creación de los paths de las distinas páginas de la App (tener en cuenta llaves en el nombre del archivo)
-//TODO: Realizar petición a la base de datos para cargar la información correspondiente
 export const getStaticPaths: GetStaticPaths = async (ctx) => {
-   const exercises = initialData.exercises;
+   const exercises = await dbExercise.getAll();
    return {
       paths: exercises.map(({ id }) => ({
-         params: { id }
+         params: { id: String(id) }
       })),
       fallback: "blocking"
    }
 }
 
 //*Método para crear el contenido estático que va a ir a las props de la página que va a ser renderizada
-//TODO: Realizar petición a la base de datos para cargar la información correspondiente
 export const getStaticProps: GetStaticProps = async ({ params }) => {
    const { id = '' } = params as { id: string };
-   const exercise = initialData.exercises.find(exercise => exercise.id === id);
+   const exercise = await dbExercise.getById(id);
    if (!exercise) {
       return {
          redirect: {

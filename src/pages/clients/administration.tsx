@@ -1,46 +1,39 @@
 
 import { ChangeEvent, FC, useRef, useState } from 'react';
+import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
 import { useForm } from 'react-hook-form';
 import { DeleteOutline, SaveOutlined, UploadOutlined } from '@mui/icons-material';
-import { Box, Button, Card, CardActions, CardMedia, Divider, FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, TextField, Typography, capitalize } from '@mui/material';
+import { Alert, Box, Button, Card, CardActions, CardMedia, CircularProgress, Divider, FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, Stack, TextField, Typography, capitalize } from '@mui/material';
 
 import { DashboardLayaout } from '../../components/layouts';
 import { validations } from '../../utils';
-import { IUser } from '../../interface';
+import { FormDataClient, IUser } from '../../interface';
 import { myFavoriteCoachNextApi } from '../../api';
+import { dbUsers } from '../../database';
 
-const validGender = ['masculono', 'femenino', 'no especificar'];
-
-interface FormData {
-  identificationNumber: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  phoneNumber: string;
-  gender: string;
-  age: Number;
-  weight?: Number;
-  height?: Number;
-  profilePicture?: string;
-}
+const validGender = ['masculino', 'femenino', 'no especificar'];
 
 interface Props {
   user: IUser;
 }
 
-const RegisterClientPage: FC<Props> = ({ user }) => {
+const AdministrationClientPage: FC<Props> = ({ user }) => {
 
   const [isSaving, setIsSaving] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const [showError, setShowError] = useState(false);
+
+  const router = useRouter();
+
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const { register, handleSubmit, formState: { errors }, getValues, setValue, watch } = useForm<FormData>({ defaultValues: user })
+  const { register, handleSubmit, formState: { errors }, getValues, setValue, watch } = useForm<FormDataClient>({ defaultValues: user })
 
   const onFileSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
-    if (!target.files || target.files.length === 0) {
+    if (!target.files) {
       return;
     }
     try {
@@ -57,9 +50,7 @@ const RegisterClientPage: FC<Props> = ({ user }) => {
   const onDeleteImage = async () => {
     try {
       const imageUrl = getValues('profilePicture');
-      await myFavoriteCoachNextApi.post('/deleteImage', {
-        data: imageUrl
-      });
+      await myFavoriteCoachNextApi.post('/deleteImage', { data: imageUrl });
       setValue(
         'profilePicture',
         undefined,
@@ -69,17 +60,34 @@ const RegisterClientPage: FC<Props> = ({ user }) => {
     } catch (error) {
       console.log(error);
     }
-
   }
 
-  const onSubmit = () => {
-    //TODO: implementar lógica
+  const onSubmit = async (formData: FormDataClient) => {
+    if (!formData.profilePicture) {
+      setShowError(true);
+      setTimeout(() => setShowError(false), 4000);
+      return;
+    }
+    try {
+      setIsSaving(true);
+      let client: IUser;
+      if (user) {
+        user = { ...formData }
+        client = await dbUsers.updateClient(user);
+      } else {
+        client = await dbUsers.createClient(formData);
+      }
+      router.replace(`/clients/${client.id}`)
+    } catch (error) {
+      console.log(error);
+      setIsSaving(false);
+    }
   }
 
   return (
-    <DashboardLayaout title={'Registro de Nuevo Cliente'} pageDescription={'Registro de un nuevo cliente en la aplicación'}>
+    <DashboardLayaout title={'Administración de Clientes'} pageDescription={'Registro o edición de un nuevo cliente en la aplicación'}>
 
-      <Typography variant='h1' component='h1' marginTop='30px' marginBottom='15px'>Registro Nuevo Cliente</Typography>
+      <Typography variant='h1' component='h1' marginTop='30px' marginBottom='15px'>Registro o Edición Clientes</Typography>
 
       <form onSubmit={handleSubmit(onSubmit)}>
 
@@ -101,30 +109,46 @@ const RegisterClientPage: FC<Props> = ({ user }) => {
               helperText={errors.identificationNumber?.message}
             />
 
-            <TextField
-              label="Nombre"
-              variant="filled"
-              fullWidth
-              sx={{ mb: 1 }}
-              {...register('firstName', {
-                required: 'Este Campo es Requerido!',
-                minLength: { value: 2, message: 'El nombre debe contener como mínimo 2 caracteres!' }
-              })}
-              error={!!errors.firstName}
-              helperText={errors.firstName?.message}
-            />
+            <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+              <TextField
+                label="Nombre"
+                variant="filled"
+                fullWidth
+                sx={{ mb: 1 }}
+                {...register('firstName', {
+                  required: 'Este Campo es Requerido!',
+                  minLength: { value: 2, message: 'El nombre debe contener como mínimo 2 caracteres!' }
+                })}
+                error={!!errors.firstName}
+                helperText={errors.firstName?.message}
+              />
+
+              <TextField
+                label="Apellido"
+                variant="filled"
+                fullWidth
+                sx={{ ml: 1 }}
+                {...register('lastName', {
+                  required: 'Este Campo es Requerido!',
+                  minLength: { value: 2, message: 'El apellido debe contener como mínimo 2 caracteres!' }
+                })}
+                error={!!errors.lastName}
+                helperText={errors.lastName?.message}
+              />
+            </Box>
 
             <TextField
-              label="Apellido"
+              label="Número de Teléfono"
+              type='number'
               variant="filled"
               fullWidth
               sx={{ mb: 1 }}
-              {...register('lastName', {
+              {...register('phoneNumber', {
                 required: 'Este Campo es Requerido!',
-                minLength: { value: 2, message: 'El apellido debe contener como mínimo 2 caracteres!' }
+                minLength: { value: 10, message: 'El número de teléfono debe ser mínimo de 10 cifras!' }
               })}
-              error={!!errors.lastName}
-              helperText={errors.lastName?.message}
+              error={!!errors.phoneNumber}
+              helperText={errors.phoneNumber?.message}
             />
 
             <TextField
@@ -171,8 +195,8 @@ const RegisterClientPage: FC<Props> = ({ user }) => {
 
               <TextField
                 label="Peso"
-                type='number'
                 variant="filled"
+                inputProps={{ inputMode: 'numeric', pattern: '^[0-9]+([.][0-9]+)?$' }}
                 sx={{ ml: 1 }}
                 {...register('weight', {
                   required: 'Este Campo es Requerido!',
@@ -184,7 +208,7 @@ const RegisterClientPage: FC<Props> = ({ user }) => {
 
               <TextField
                 label="Altura"
-                type='number'
+                inputProps={{ inputMode: 'numeric', pattern: '^[0-9]+([.][0-9]+)?$' }}
                 variant="filled"
                 sx={{ ml: 1 }}
                 {...register('height', {
@@ -199,8 +223,9 @@ const RegisterClientPage: FC<Props> = ({ user }) => {
             <Divider sx={{ my: 1 }} />
 
             <FormControl sx={{ mb: 1 }}>
-              <FormLabel>Género</FormLabel>
+              <FormLabel id='radio-buttons-group'>Género</FormLabel>
               <RadioGroup
+                aria-labelledby='radio-buttons-group'
                 row
                 value={getValues('gender')}
                 onChange={({ target }) => setValue('gender', target.value, { shouldValidate: true })}
@@ -227,14 +252,20 @@ const RegisterClientPage: FC<Props> = ({ user }) => {
             <Button
               color="secondary"
               fullWidth
-              startIcon={<UploadOutlined fontSize='large' />}
+              startIcon={<UploadOutlined fontSize='large' sx={{ display: isLoading ? 'none' : 'flex' }} />}
               className='circular-btn'
               sx={{ mt: 1, mb: 2, display: getValues('profilePicture') ? 'none' : 'flex' }}
               size='large'
               disabled={isLoading}
               onClick={() => fileInputRef.current?.click()}
             >
-              Subir Imagen
+              {
+                isLoading
+                  ? (
+                    <CircularProgress color='inherit' size={25} />
+                  )
+                  : 'Subir Imagen'
+              }
             </Button>
             <input
               ref={fileInputRef} // se utiliza el useRef para hacer referencia al botón que queremes realmente que haga la acción
@@ -265,6 +296,12 @@ const RegisterClientPage: FC<Props> = ({ user }) => {
               </CardActions>
             </Card>
 
+            <Stack sx={{ width: '100%', display: showError ? 'flex' : 'none' }} spacing={2}>
+              <Alert variant="filled" severity="warning">
+                Se requiere agregar una foto de perfil!
+              </Alert>
+            </Stack>
+
           </Grid>
 
         </Grid>
@@ -287,4 +324,28 @@ const RegisterClientPage: FC<Props> = ({ user }) => {
     </DashboardLayaout>
   )
 }
-export default RegisterClientPage;
+
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const { id } = query;
+  if (!id) return { props: {} };
+  try {
+    const user = await dbUsers.getUserById(`${id}`);
+    return {
+      props: {
+        user
+      }
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      redirect: {
+        destination: '/clients',
+        permanent: false,
+      }
+    }
+  }
+}
+
+export default AdministrationClientPage;
+
+//TODO: Optimizar esta página al igual que la correspondiente a la creación de los ejercicios

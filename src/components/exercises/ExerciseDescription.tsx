@@ -12,10 +12,10 @@ interface Props {
 export const ExerciseDescription: FC<Props> = ({ exercise }) => {
 
    return (
-      <Card>
+      <Card className='summary-card'>
          <CardMedia
             component='img'
-            image={`/exercises/${exercise.referenceImage}`}
+            image={exercise.referenceImage}
             height={400}
          />
          <CardContent>

@@ -4,12 +4,20 @@ import { Avatar, Box, Button, Card, CardContent, CardMedia, Chip, Grid, List, Li
 import { EditOutlined, EmailOutlined, PhoneAndroidOutlined, ScaleOutlined, StraightenOutlined } from '@mui/icons-material';
 
 import { IUser } from '../../interface/user';
+import { useRouter } from 'next/router';
 
 interface Props {
    user: IUser;
 }
 
 export const UserProfile: FC<Props> = ({ user }) => {
+
+   const router = useRouter();
+
+   const handlreRedirect = () => {
+      router.replace(`/clients/administration?id=${user.id}`);
+   }
+
    return (
       <Grid container spacing={3} marginBottom='30px'>
 
@@ -88,6 +96,7 @@ export const UserProfile: FC<Props> = ({ user }) => {
                   color='secondary'
                   startIcon={<EditOutlined />}
                   size='large'
+                  onClick={handlreRedirect}
                >
                   Editar Perfil
                </Button>
